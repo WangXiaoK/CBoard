@@ -153,7 +153,8 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             {name: translate('CONFIG.WIDGET.PERCENT_LINE'), value: 'percentline'},
             {name: translate('CONFIG.WIDGET.BAR'), value: 'bar'},
             {name: translate('CONFIG.WIDGET.STACKED_BAR'), value: 'stackbar'},
-            {name: translate('CONFIG.WIDGET.PERCENT_BAR'), value: 'percentbar'}
+            {name: translate('CONFIG.WIDGET.PERCENT_BAR'), value: 'percentbar'},
+            {name: translate('CONFIG.WIDGET.POLAR_BAR'), value:'polarbar'}
         ];
 
         $scope.china_map_types = [
@@ -170,6 +171,12 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
             {name: 'min', value: 'min'},
             {name: 'distinct', value: 'distinct'}
         ];
+
+        $scope.value_pie_types = [
+            {name: translate('CONFIG.WIDGET.PIE'), value: 'pie'},
+            {name: translate('CONFIG.WIDGET.DOUGHNUT'), value: 'doughnut'},
+            {name: translate('CONFIG.WIDGET.COXCOMB'), value: 'coxcomb'}
+        ]
 
         $scope.kpi_styles = [
             {name: translate('CONFIG.WIDGET.AQUA'), value: 'bg-aqua'},
@@ -652,6 +659,18 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                         v.type = 'value';
                     });
                     break;
+                case 'pie':
+                    $scope.curWidget.config.values.push({name: '', cols: []});
+                    _.each(oldConfig.values, function (v) {
+                        _.each(v.cols, function (c) {
+                            $scope.curWidget.config.values[0].cols.push(c);
+                        });
+                    });
+                    _.each($scope.curWidget.config.values, function (v) {
+                        v.series_type = 'pie';
+                        v.type = 'value';
+                    });
+                    break;
                 case 'kpi':
                     $scope.curWidget.config.values.push({name: '', cols: []});
                     _.each(oldConfig.values, function (v) {
@@ -931,6 +950,15 @@ cBoard.controller('widgetCtrl', function ($scope, $state, $stateParams, $http, $
                 cols: []
             });
         };
+
+        $scope.add_pie_value = function () {
+            $scope.curWidget.config.values.push({
+                name: '',
+                series_type: 'pie',
+                type: 'value',
+                cols: []
+            });
+        }
 
         $scope.add_china_map_value = function () {
             $scope.curWidget.config.values.push({
